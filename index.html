@@ -1276,6 +1276,13 @@
   .tick:focus-visible{outline:3px solid #1d6fe0;outline-offset:2px}
   .qcrow .qcnotelbl{display:grid;gap:4px;margin-top:4px;font-weight:600}
   .qcpass{color:#14532d;font-weight:600}
+  .qcfold{position:relative;max-height:5.6em;overflow:hidden;transition:max-height .25s ease}
+  .qcfold{-webkit-mask-image:linear-gradient(#000 45%,transparent);mask-image:linear-gradient(#000 45%,transparent)}
+  .qcfold.open{max-height:none;-webkit-mask-image:none;mask-image:none}
+  .qcexp{margin:6px 0 2px;border:0;border-radius:999px;background:#1f2937;color:#fff;font-weight:700;font-size:12.5px;padding:6px 14px;cursor:pointer}
+  .qcexp.jig{animation:audjig 2.4s ease-in-out infinite}
+  .qcexp:hover{animation:none;background:#000}
+  @media (prefers-reduced-motion:reduce){.qcexp.jig{animation:none}}
   .qcrow.qcrel{background:rgba(255,255,255,.7);border-radius:8px;padding:6px 9px;margin-top:8px;font-size:12.5px}
   .qcrow .qcnotelbl textarea{width:100%;font:inherit;font-weight:400;font-size:14px;padding:8px 10px;border:1px solid var(--line);border-radius:9px}
   .qcrow .qcbox textarea{width:100%;font:inherit;font-size:14px;padding:9px 11px;border:1px solid var(--line);border-radius:9px}
@@ -1778,7 +1785,7 @@ function renderArtQC(id){
     const canR = ME.admin === true, rid = esc(id);
     box.innerHTML = '<h4>QC</h4><p class="qcsc">Already with the client. QC approve records your check only: the status stays For approval and nothing is sent. '
       + 'If something needs changing, edit it here (the client sees the latest version) or leave a QC note.</p>'
-      + '<div class="qcrow">' + qcAutoHtml(id) + qcListHtml(id, canR)
+      + '<div class="qcrow">' + qcFold(id, qcAutoHtml(id) + qcListHtml(id, canR))
       + (canR ? '<div class="qcbtns"><button class="btn qcok" type="button" data-artqcrel="' + rid + '"' + (qcAllTicked(id) ? '' : ' data-qcwait="1"') + '>QC approve</button></div>' : '')
       + '</div>';
     box.querySelectorAll('[data-qcnotetext]').forEach(ta => ta.addEventListener('input', () => { QCNOTES[id] = ta.value; }));
@@ -1813,7 +1820,7 @@ function renderArtQC(id){
     return;
   }
   const can = ME.admin === true, sid = esc(id);
-  box.innerHTML = '<h4>QC</h4><div class="qcrow">' + qcAutoHtml(id) + qcListHtml(id, can)
+  box.innerHTML = '<h4>QC</h4><div class="qcrow">' + qcFold(id, qcAutoHtml(id) + qcListHtml(id, can))
     + (can ? '<div class="qcbtns"><button class="btn qcok" type="button" data-artqcok="' + sid + '"' + (qcAllTicked(id) ? '' : ' data-qcwait="1"') + '>QC approve</button>'
            + '<button class="btn ghost" type="button" data-artqcback="' + sid + '">Send back</button></div>'
            + '<div class="qcbox hide" data-artqcbox="' + sid + '"><textarea data-artqcnote="' + sid + '" rows="2" placeholder="What should the writer change?"></textarea>'
@@ -4203,6 +4210,23 @@ const qcMissingMsg = id => {
   const m = QCITEMS.filter(i => qcTicks(id)[i.key] !== true).map(i => i.label);
   return 'Tick all ' + QCITEMS.length + ' QC items first. Still open: ' + m.join(', ') + '.';
 };
+/* The automatic check and the 10 ticks, folded to three lines with a wiggling Expand (Jhen 10/11/2026).
+   Open state is kept per item so a re-render after a tick does not snap it shut. */
+const QCOPEN = new Set();
+function qcFold(id, inner){
+  const open = QCOPEN.has(String(id));
+  return '<div class="qcfold' + (open ? ' open' : '') + '" data-qcfoldbox="' + esc(id) + '"><div class="qcfold-in">' + inner + '</div></div>'
+    + '<button type="button" class="qcexp' + (open ? '' : ' jig') + '" data-qcfold="' + esc(id) + '">' + (open ? 'Collapse checklist &#9650;' : 'Expand checklist &#9660;') + '</button>';
+}
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-qcfold]'); if (!b) return;
+  const id = b.dataset.qcfold, box = b.previousElementSibling;
+  if (!box || !box.classList.contains('qcfold')) return;
+  const open = !box.classList.contains('open');
+  box.classList.toggle('open', open); open ? QCOPEN.add(id) : QCOPEN.delete(id);
+  b.classList.toggle('jig', !open);
+  b.innerHTML = open ? 'Collapse checklist &#9650;' : 'Expand checklist &#9660;';
+});
 function qcAutoHtml(id){
   const x = AUTOCHECKS[id], a = ARTICLES[id];
   if (!x) return '<div class="qcauto"><b>Automatic check:</b> not run yet. It runs whenever the blog is saved.</div>';
@@ -4251,7 +4275,7 @@ function qcPanel(r, staff){
     : '';
   return '<div class="qcrow qc-' + esc(a.qc_status) + '"><div class="qctext">' + state + '<span class="qcsc">' + scores + '</span></div>'
     + send
-    + (!li && a.qc_status !== 'approved' ? qcAutoHtml(r.id) + qcListHtml(r.id, can) : '')
+    + (!li && a.qc_status !== 'approved' ? qcFold(r.id, qcAutoHtml(r.id) + qcListHtml(r.id, can)) : '')
     + (can && a.qc_status !== 'approved'
         ? '<div class="qcbtns"><button class="btn qcok" type="button" data-qcok="' + id + '"' + (!li && !qcAllTicked(r.id) ? ' data-qcwait="1"' : '') + '>QC approve</button>'
           + '<button class="btn ghost" type="button" data-qcback="' + id + '">Send back</button></div>'
