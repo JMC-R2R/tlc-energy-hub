@@ -1275,6 +1275,8 @@
   .tick:disabled{opacity:.45}
   .tick:focus-visible{outline:3px solid #1d6fe0;outline-offset:2px}
   .qcrow .qcnotelbl{display:grid;gap:4px;margin-top:4px;font-weight:600}
+  .qcpass{color:#14532d;font-weight:600}
+  .qcrow.qcrel{background:rgba(255,255,255,.7);border-radius:8px;padding:6px 9px;margin-top:8px;font-size:12.5px}
   .qcrow .qcnotelbl textarea{width:100%;font:inherit;font-weight:400;font-size:14px;padding:8px 10px;border:1px solid var(--line);border-radius:9px}
   .qcrow .qcbox textarea{width:100%;font:inherit;font-size:14px;padding:9px 11px;border:1px solid var(--line);border-radius:9px}
 
@@ -1760,10 +1762,52 @@ async function loadArtQC(itemId, ver){
   if (q.data) QCCHECKS[itemId] = q.data;
   renderArtQC(itemId);
 }
+function qcPassedAfterRelease(a){
+  return !!(a && a.released_at && a.qc_status === 'approved' && a.qc_at && new Date(a.qc_at) > new Date(a.released_at));
+}
 function renderArtQC(id){
   const box = $('artQC'), a = ARTICLES[id];
   if (!a) { box.hidden = true; return; }
   box.hidden = false;
+  if (a.released_at && ME.kind === 'internal') {
+    if (qcPassedAfterRelease(a)) {
+      box.innerHTML = '<h4>QC</h4><p class="qcsc qcpass">QC passed by <b>' + esc(a.qc_name || '') + '</b>, ' + esc(ausDate(String(a.qc_at).slice(0, 10)))
+        + '. Still with the client for approval.</p>';
+      return;
+    }
+    const canR = ME.admin === true, rid = esc(id);
+    box.innerHTML = '<h4>QC</h4><p class="qcsc">Already with the client. QC approve records your check only: the status stays For approval and nothing is sent. '
+      + 'If something needs changing, edit it here (the client sees the latest version) or leave a QC note.</p>'
+      + '<div class="qcrow">' + qcAutoHtml(id) + qcListHtml(id, canR)
+      + (canR ? '<div class="qcbtns"><button class="btn qcok" type="button" data-artqcrel="' + rid + '"' + (qcAllTicked(id) ? '' : ' data-qcwait="1"') + '>QC approve</button></div>' : '')
+      + '</div>';
+    box.querySelectorAll('[data-qcnotetext]').forEach(ta => ta.addEventListener('input', () => { QCNOTES[id] = ta.value; }));
+    box.querySelectorAll('[data-qctick]').forEach(cb => cb.addEventListener('change', () => {
+      qcTicks(id)[cb.dataset.qckey] = cb.checked;
+      const done = QCITEMS.filter(i => qcTicks(id)[i.key] === true).length;
+      const c = box.querySelector('[data-qccount]'); if (c) c.textContent = done + ' of ' + QCITEMS.length + ' ticked';
+      const ok = box.querySelector('[data-artqcrel]');
+      if (ok) { if (qcAllTicked(id)) ok.removeAttribute('data-qcwait'); else ok.setAttribute('data-qcwait', '1'); }
+    }));
+    const okR = box.querySelector('[data-artqcrel]');
+    if (okR) okR.addEventListener('click', async () => {
+      if (!qcAllTicked(id)) { badge(qcMissingMsg(id), 'err'); return; }
+      okR.disabled = true; badge('Saving…');
+      const qnote = (QCNOTES[id] || '').trim();
+      let { error } = await sb.rpc('ch_qc_checklist_save', { p_item_id: id, p_checks: qcTicks(id), p_note: qnote || null });
+      if (!error) {
+        QCCHECKS[id] = { item_id: id, article_version: a.version, checks: Object.assign({}, qcTicks(id)), note: qnote, checked_name: ME.name, checked_at: new Date().toISOString() };
+        ({ error } = await sb.rpc('ch_qc_approve_released', { p_item_id: id }));
+      }
+      if (error) { okR.disabled = false; badge(error.message || 'Could not save QC.', 'err'); return; }
+      Object.assign(a, { qc_status: 'approved', qc_name: ME.name, qc_at: new Date().toISOString(), qc_note: null });
+      badge('QC passed. It stays For approval with the client.', 'ok');
+      renderArtQC(id);
+      const t = TABLIST.find(x => x.monthKey === (ITEMS.find(y => y.id === id) || {}).month_key);
+      if (t && typeof refreshMonth === 'function') refreshMonth(t);
+    });
+    return;
+  }
   if (a.released_at || a.qc_status === 'approved') {
     box.innerHTML = '<h4>QC</h4><p class="qcsc">' + (a.released_at ? 'With the client.' : 'QC approved by ' + esc(a.qc_name || '') + '.') + '</p>';
     return;
@@ -4187,6 +4231,11 @@ function qcListHtml(id, can){
 function qcPanel(r, staff){
   const a = ARTICLES[r.id];
   const li = r.deliverable === 'linkedin_article';
+  if (staff && a && a.released_at && (r.deliverable === 'blog' || r.deliverable === 'page')) {
+    return '<div class="qcrow qcrel"><div class="qctext">' + (qcPassedAfterRelease(a)
+      ? '&#10003; QC passed by <b>' + esc(a.qc_name || '') + '</b>, ' + esc(ausDate(String(a.qc_at).slice(0, 10))) + '. Still with the client.'
+      : '<b>Not QC checked yet.</b> Open Read &amp; comment to tick the QC list. It stays For approval either way.') + '</div></div>';
+  }
   if (!staff || (r.stream !== 'blog' && !li) || !a || a.released_at) return '';
   const id = esc(r.id);
   const sc = a.scores || {};
