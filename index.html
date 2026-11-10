@@ -1171,6 +1171,13 @@
   @keyframes rhnudge{0%,100%{transform:translateX(0)}50%{transform:translateX(-6px)}}
   @media (prefers-reduced-motion:reduce){.readhint{animation:none}}
   .qcrow .btn.qcok[data-qcwait]{opacity:.55}
+  /* Tick boxes you can see (Jhen 10/11/2026): black border, green tick for Approve, red for Not approved. */
+  .tick{-webkit-appearance:none;appearance:none;border:2px solid #1f2328;border-radius:5px;background:#fff;display:inline-grid;place-content:center;flex:none;margin:0}
+  .tick:checked{background:#1c9b5e;border-color:#1c9b5e}
+  .tick:checked::after{content:'';width:6px;height:11px;border:solid #fff;border-width:0 3px 3px 0;transform:translateY(-1px) rotate(45deg)}
+  .tickl.no .tick:checked{background:#d92d20;border-color:#d92d20}
+  .tick:disabled{opacity:.45}
+  .tick:focus-visible{outline:3px solid #1d6fe0;outline-offset:2px}
   .qcrow .qcnotelbl{display:grid;gap:4px;margin-top:4px;font-weight:600}
   .qcrow .qcnotelbl textarea{width:100%;font:inherit;font-weight:400;font-size:14px;padding:8px 10px;border:1px solid var(--line);border-radius:9px}
   .qcrow .qcbox textarea{width:100%;font:inherit;font-size:14px;padding:9px 11px;border:1px solid var(--line);border-radius:9px}
