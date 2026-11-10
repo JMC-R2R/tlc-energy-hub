@@ -4255,7 +4255,8 @@ function qcListHtml(id, can){
 function qcPanel(r, staff){
   const a = ARTICLES[r.id];
   const li = r.deliverable === 'linkedin_article';
-  if (staff && a && a.released_at && (r.deliverable === 'blog' || r.deliverable === 'page')) {
+  // Blogs only: pages have no QC checklist yet (Jhen 10/11/2026).
+  if (staff && a && a.released_at && r.deliverable === 'blog' && r.stream === 'blog') {
     return '<div class="qcrow qcrel"><div class="qctext">' + (qcPassedAfterRelease(a)
       ? '&#10003; QC passed by <b>' + esc(a.qc_name || '') + '</b>, ' + esc(ausDate(String(a.qc_at).slice(0, 10))) + '. Still with the client.'
       : '<b>Not QC checked yet.</b> Open Read &amp; comment to tick the QC list. It stays For approval either way.') + '</div></div>';
