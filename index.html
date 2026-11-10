@@ -1154,15 +1154,16 @@
   .qcrow .qcitem input{margin-top:3px;width:16px;height:16px;flex:none}
   .qcrow .btn.qcok:disabled{opacity:.45;cursor:not-allowed}
   .cbub{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.02em;padding:3px 10px;border-radius:999px;margin:0 0 6px}
-  .cbub.due{background:#fff3cf;color:#8a5a00}.cbub.ok{background:#e3f6ee;color:#1c7c54}
-  .cbub.chg{background:#fde8e8;color:#b42318}.cbub.soon{background:#eef1f4;color:#5d6b79}
-  .cbub.sched{background:#e0f5f2;color:#0e7a6d}.cbub.live{background:#e5efff;color:#1d5fd1}
-  .card.st-due,.gcard.st-due{border-color:#f2c94c;background:#fffbea;box-shadow:inset 4px 0 0 #f2b705}
-  .card.st-ok,.gcard.st-ok{border-color:#a6dcc1;background:#f3fbf6;box-shadow:inset 4px 0 0 #1c9b5e}
-  .card.st-chg,.gcard.st-chg{border-color:#f3b4b4;background:#fff5f5;box-shadow:inset 4px 0 0 #d92d20}
-  .card.st-soon,.gcard.st-soon{border-color:#e3e8ee;background:#fff;box-shadow:inset 4px 0 0 #c3ccd5}
-  .card.st-sched,.gcard.st-sched{border-color:#9fdcd3;background:#f1fbf9;box-shadow:inset 4px 0 0 #0e9384}
-  .card.st-live,.gcard.st-live{border-color:#a9c7f5;background:#f2f7ff;box-shadow:inset 4px 0 0 #1d6fe0}
+  .cbub{color:#fff}
+  .cbub.due{background:#d48c00}.cbub.ok{background:#1c9b5e}.cbub.chg{background:#d92d20}
+  .cbub.soon{background:#7a8794}.cbub.sched{background:#0e9384}.cbub.live{background:#1d6fe0}
+  .card.st-due,.gcard.st-due{border:2px solid #f2b705;background:#fff3c4}
+  .card.st-ok,.gcard.st-ok{border:2px solid #1c9b5e;background:#d9f3e5}
+  .card.st-chg,.gcard.st-chg{border:2px solid #d92d20;background:#fde2e0}
+  .card.st-soon,.gcard.st-soon{border:2px solid #b8c2cc;background:#eef1f4}
+  .card.st-sched,.gcard.st-sched{border:2px solid #0e9384;background:#d6f2ee}
+  .card.st-live,.gcard.st-live{border:2px solid #1d6fe0;background:#dde9fd}
+  .card.st-ok .ttl,.gcard.st-ok .gttl{color:#14532d}.card.st-chg .ttl,.gcard.st-chg .gttl{color:#7a1a12}
   .cread{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:10px}
   .readhint{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:var(--accent-fill,#c58a00);animation:rhnudge 1.2s ease-in-out infinite}
   @keyframes rhnudge{0%,100%{transform:translateX(0)}50%{transform:translateX(-6px)}}
@@ -5073,9 +5074,6 @@ function itemCard(r, staff){
           ? '<button class="notebtn wpbtn" type="button" data-noindex="'+id+'" title="Press once the noindex tag is off the live page">Noindex removed</button>' : '')
     + '</div></div>'
     + '<div class="ticks">'
-      + (staff && isPlanned(r) && !li
-          ? '<label class="tickl" title="Staff only: queues the writer"><input class="tick" type="checkbox" data-topic="'+id+'"'+(r.topic_approved?' checked':'')+'> Topic OK to write</label>'
-          : '')
       + '<label class="tickl"><input class="tick" type="checkbox" data-approve="'+id+'"'
         + (r.approved?' checked':'') + (canTick?'':' disabled')
         + ' title="'+(canTick?'Approve this item':(topicWaiting(r)?'Approve the topic first':'Not ready for approval yet'))+'"> '+(li ? 'Approve topic &amp; article' : 'Approve content')+'</label>'
