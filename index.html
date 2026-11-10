@@ -1187,6 +1187,11 @@
   .audfoot .cbub{margin:0}
   .audopen{border:0;border-radius:999px;background:#111827;color:#fff;font-weight:700;font-size:13px;padding:8px 14px;cursor:pointer}
   .audopen:hover{background:#000}
+  /* Waiting on the client: the button itself wiggles instead of a Start here arrow (Jhen 10/11/2026). */
+  .audopen.audjig{background:#d48c00;animation:audjig 2.4s ease-in-out infinite;box-shadow:0 4px 12px -4px rgba(154,91,0,.7)}
+  .audopen.audjig:hover{animation:none;background:#9a5b00}
+  @keyframes audjig{0%,62%,100%{transform:rotate(0) scale(1)}66%{transform:rotate(-4deg) scale(1.06)}72%{transform:rotate(4deg) scale(1.06)}78%{transform:rotate(-3deg) scale(1.04)}84%{transform:rotate(2deg)}90%{transform:rotate(0)}}
+  @media (prefers-reduced-motion:reduce){.audopen.audjig{animation:none}}
   .audsheet{width:100%;max-width:880px}
   .audpanel{background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 18px 44px rgba(0,0,0,.34)}
   .audhead2{padding:18px 22px 14px;border-bottom:1px solid #e5e7eb}
@@ -1840,10 +1845,10 @@ function renderAudits(){
         + '<span class="audkick">Audit ' + String(i + 1).padStart(2, '0') + '</span></div>'
         + '<h4 class="audttl">' + esc(x.title) + '</h4>'
         + (x.summary ? '<p class="audsum">' + esc(x.summary) + '</p>' : '')
-        + (!ready && x.reason ? '<p class="audwhy"><b>Why it is not ready yet:</b> ' + esc(x.reason) + '</p>' : '')
+        // The reason is for the team only (Jhen 10/11/2026); the client sees the status alone.
+        + (!ready && x.reason && ME.kind === 'internal' ? '<p class="audwhy"><b>Why it is not ready yet (team only):</b> ' + esc(x.reason) + '</p>' : '')
         + '<div class="audfoot"><span class="cbub ' + k + '">' + lab + '</span>'
-        + (ready ? '<button class="audopen" type="button" data-audopen="' + x.id + '">Read &amp; approve</button>'
-                   + (wants ? READ_HINT : '') : '')
+        + (ready ? '<button class="audopen' + (wants ? ' audjig' : '') + '" type="button" data-audopen="' + x.id + '">Read &amp; approve</button>' : '')
         + '</div></div>';
     }).join('');
   });
