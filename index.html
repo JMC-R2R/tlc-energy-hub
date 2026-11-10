@@ -1156,6 +1156,13 @@
   .cbub{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.02em;padding:3px 10px;border-radius:999px;margin:0 0 6px}
   .cbub.due{background:#fff3cf;color:#8a5a00}.cbub.ok{background:#e3f6ee;color:#1c7c54}
   .cbub.chg{background:#fde8e8;color:#b42318}.cbub.soon{background:#eef1f4;color:#5d6b79}
+  .cbub.sched{background:#e0f5f2;color:#0e7a6d}.cbub.live{background:#e5efff;color:#1d5fd1}
+  .card.st-due,.gcard.st-due{border-color:#f2c94c;background:#fffbea;box-shadow:inset 4px 0 0 #f2b705}
+  .card.st-ok,.gcard.st-ok{border-color:#a6dcc1;background:#f3fbf6;box-shadow:inset 4px 0 0 #1c9b5e}
+  .card.st-chg,.gcard.st-chg{border-color:#f3b4b4;background:#fff5f5;box-shadow:inset 4px 0 0 #d92d20}
+  .card.st-soon,.gcard.st-soon{border-color:#e3e8ee;background:#fff;box-shadow:inset 4px 0 0 #c3ccd5}
+  .card.st-sched,.gcard.st-sched{border-color:#9fdcd3;background:#f1fbf9;box-shadow:inset 4px 0 0 #0e9384}
+  .card.st-live,.gcard.st-live{border-color:#a9c7f5;background:#f2f7ff;box-shadow:inset 4px 0 0 #1d6fe0}
   .cread{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:10px}
   .readhint{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:var(--accent-fill,#c58a00);animation:rhnudge 1.2s ease-in-out infinite}
   @keyframes rhnudge{0%,100%{transform:translateX(0)}50%{transform:translateX(-6px)}}
@@ -1719,7 +1726,7 @@ function linkedInReadHtml(r, html){
   const a = ARTICLES[r.id] || {}, m = a.meta || {};
   const staff = ME.kind === 'internal';
   let out = r.banner_url ? '<img class="lix libanner" src="' + esc(r.banner_url) + '" alt="' + esc(m.banner_alt || r.title) + '">' : '';
-  if (m.sync_changed && m.sync_note && (staff || a.released_at))
+  if (m.sync_changed && m.sync_note && staff)   // team only (Jhen 10/11/2026)
     out += '<div class="lix linote"><b>Updated ' + esc(ausDate(String(m.sync_at || '').slice(0,10))) + ' to match a blog edit.</b> ' + esc(m.sync_note) + '</div>';
   out += '<h1>' + esc(r.title) + '</h1>' + html;
   if (r.post_body) out += '<div class="lix lipromo"><p class="lph">Shared with this post on LinkedIn</p><p>' + esc(r.post_body) + '</p>'
@@ -4852,9 +4859,8 @@ function gbpClientCard(r){
   const id = esc(r.id);
   const hasCaption = !!(r.post_body && r.post_cta);
   const done = !!r.approved;
-  const bub = done ? '<span class="cbub ok">Approved</span>'
-            : (hasCaption ? '<span class="cbub due">For approval</span>' : '<span class="cbub soon">Being prepared</span>');
-  return '<div class="gcard ccard' + (done ? ' gdone s-done' : '') + '" id="' + esc(r.anchor) + '" data-id="' + id + '">'
+  const bub = clientBubbleV2(r);
+  return '<div class="gcard ccard st-' + statusKey(r) + (done ? ' gdone s-done' : '') + '" id="' + esc(r.anchor) + '" data-id="' + id + '">'
     + bub
     + '<p class="gttl">' + esc(r.title) + '</p>'
     + (r.post_body ? '<div class="cread"><button class="notebtn seepost readbtn" type="button" data-gbp="' + id + '">&#9654; See the post</button>'
@@ -4875,7 +4881,7 @@ function gbpCard(r, staff){
   const day = DAY_LABEL[new Date(r.publish_date + 'T00:00:00').getDay()];
   const done = r.approved || (isPlanned(r) && r.topic_approved && r.client_status === 'approved');
   const stage = done ? ' s-done' : (isPlanned(r) && r.topic_approved ? ' s-topic' : '');
-  return '<div class="gcard' + (done ? ' gdone' : '') + stage + '" id="' + esc(r.anchor) + '" data-id="' + id + '">'
+  return '<div class="gcard st-' + statusKey(r) + (done ? ' gdone' : '') + stage + '" id="' + esc(r.anchor) + '" data-id="' + id + '">'
     + '<div class="ghead"><span class="gday">' + (DAY_ICON[day] || '') + ' ' + day + '</span>'
       + (r.post_type ? '<span class="ptype">' + esc(POST_TYPE[r.post_type] || r.post_type) + '</span>' : '')
       + '</div>'
@@ -4897,7 +4903,6 @@ function gbpCard(r, staff){
               : '<span class="ahint" style="margin:0">No link set</span>')
           + '</div>'
         : '')
-    + socialStrip()
     + (staff && r.image_source_id && DRIVEPICS[r.image_source_id]
         ? '<div class="gcta"><span class="gctab">Image</span>'
           + '<a class="gurl" href="https://drive.google.com/file/d/' + esc(DRIVEPICS[r.image_source_id]) + '/view" target="_blank" rel="noopener"'
@@ -4928,7 +4933,25 @@ function gbpCard(r, staff){
 /* Client view (Jose and Jhen, 10/11/2026): the client sees only what they act on. A status bubble,
    the title, the one button to read the piece (with a pointer to it) and the two ticks. Keywords,
    volumes, notes and staff buttons stay on the staff card. */
+/* Status colours: For approval amber, Approved green, Changes requested red, Being prepared grey,
+   Scheduled teal, Published blue. The card edge and the bubble always match. */
+function statusKey(r){
+  if (r.client_status === 'live') return 'live';
+  if (r.client_status === 'scheduled' || (r.approved && r.scheduled_for)) return 'sched';
+  if (r.approved) return 'ok';
+  if (r.not_approved) return 'chg';
+  if (r.stream === 'gbp') return (r.post_body && r.post_cta) ? 'due' : 'soon';
+  return r.client_status !== 'started' ? 'due' : 'soon';
+}
+const STATUS_LABEL = { live:'Published', sched:'Scheduled', ok:'Approved', chg:'Changes requested', due:'For approval' };
+function clientBubbleV2(r){
+  const k = statusKey(r);
+  if (k !== 'soon') return '<span class="cbub ' + k + '">' + STATUS_LABEL[k] + '</span>';
+  const bs = blogStage(r);
+  return '<span class="cbub soon">' + esc(bs ? bs.label : 'Being prepared') + '</span>';
+}
 function clientBubble(r){
+  return clientBubbleV2(r);
   const ready = r.client_status !== 'started';
   if (r.approved) return '<span class="cbub ok">Approved</span>';
   if (r.not_approved) return '<span class="cbub chg">Changes requested</span>';
@@ -4952,7 +4975,7 @@ function clientCard(r){
     read = '<a class="notebtn readbtn" href="' + esc(r.doc_url) + '" target="_blank" rel="noopener">&#9654; Read the draft</a>';
   }
   const stage = r.approved ? ' s-done' : '';
-  return '<div class="card ccard' + stage + '" id="' + esc(r.anchor) + '" data-id="' + id + '">'
+  return '<div class="card ccard st-' + statusKey(r) + stage + '" id="' + esc(r.anchor) + '" data-id="' + id + '">'
     + '<div class="body">'
     + clientBubble(r)
     + '<p class="ttl">' + esc(r.title) + '</p>'
@@ -5020,7 +5043,7 @@ function itemCard(r, staff){
   const syncTag = li && am.sync_changed && am.sync_note ? '<span class="lisync">Updated to match blog edit, ' + esc(ausDate(String(am.sync_at || '').slice(0,10))) + '</span>' : '';
 
   const stage = r.approved ? ' s-done' : (isPlanned(r) && r.topic_approved ? ' s-topic' : '');
-  let out = '<div class="card'+stage+'" id="'+esc(r.anchor)+'" data-id="'+id+'">'
+  let out = '<div class="card st-'+statusKey(r)+stage+'" id="'+esc(r.anchor)+'" data-id="'+id+'">'
     + '<div class="body">'
     + '<p class="ttl">'+esc(r.title)+'</p>'
     + '<div class="facts">'+facts.join('')+'</div>'
@@ -5431,7 +5454,7 @@ function wireMonthBrief(el, t){
       + '</div>'
       + (r.post_cta ? '<a class="gbpcta" href="' + esc(r.target_url || '#') + '" target="_blank" rel="noopener">'
                       + esc(r.post_cta) + '</a>' : '')
-      + '<div class="gbpalso">Also going out on' + socialStrip() + '</div>';
+      ;
     $('gbpModal').dataset.item = r.id;
     $('gbpModal').hidden = false;
     document.body.style.overflow = 'hidden';
