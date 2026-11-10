@@ -1226,6 +1226,45 @@
   .audnotes .k-ok{color:#14532d;font-weight:700}.audnotes .k-no{color:#a8231a;font-weight:700}
   .auddone{font-size:14px;font-weight:700}
   .audmsg{font-size:13.5px;font-weight:700;color:#14532d}.audmsg.err{color:#a8231a}
+  /* Audit pop-up, richer layout (Jhen 10/11/2026) */
+  .audhead2{background:linear-gradient(135deg,#111827 0%,#1f2a44 100%);color:#fff;border-bottom:4px solid var(--accent-fill,#F0C010)}
+  .audhead2 .audttl{color:#fff}.audhead2 .audsum{color:#cbd5e1}
+  .audtldr{background:linear-gradient(135deg,#fff8db,#fff1c2);border:0;border-left:5px solid var(--accent-fill,#F0C010);border-radius:12px;padding:14px 16px;font-size:15px}
+  .audstats div{border-radius:12px;padding:12px 14px;color:#fff;background:#1d6fe0}
+  .audstats div:nth-child(2){background:#0e9384}.audstats div:nth-child(3){background:#7c3aed}.audstats div:nth-child(4){background:#d48c00}
+  .audstats b{font-size:26px}.audstats span{color:rgba(255,255,255,.9)}
+  .aud-now{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin:6px 0 14px}
+  .aud-now>div{border:1px solid #f3d0cc;background:#fff6f5;border-radius:12px;padding:12px 14px}
+  .aud-now .k{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:#6b7280}
+  .aud-now .v{display:block;font-size:18px;font-weight:800;color:#a8231a;margin:4px 0}
+  .aud-now p{font-size:13px;color:#4b5563;margin:0}
+  .aud-filter{display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 12px;position:sticky;top:0;background:#fff;padding:8px 0;z-index:2}
+  .aud-filter button{border:2px solid #d1d5db;background:#fff;border-radius:999px;padding:5px 13px;font-weight:700;font-size:13px;cursor:pointer;color:#374151}
+  .aud-filter button.on{background:#111827;border-color:#111827;color:#fff}
+  .aud-grp{border:1px solid #e5e7eb;border-radius:12px;margin:0 0 10px;overflow:hidden;background:#fff}
+  .aud-grp>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:12px 14px;background:#f8fafc}
+  .aud-grp>summary::-webkit-details-marker{display:none}
+  .aud-grp>summary::before{content:'';width:9px;height:9px;border-right:2.5px solid #374151;border-bottom:2.5px solid #374151;transform:rotate(-45deg);transition:transform .2s;flex:none}
+  .aud-grp[open]>summary::before{transform:rotate(45deg)}
+  .aud-grp>summary:hover{background:#f1f5f9}
+  .aud-grp .g{font-weight:800;font-size:15px;color:#111827}
+  .aud-grp .m{font-size:12.5px;color:#6b7280}
+  .aud-grp .ps{margin-left:auto;display:flex;gap:5px}
+  .aud-grp .scroll{padding:0 10px 8px}
+  .vb{display:flex;align-items:center;justify-content:flex-end;gap:8px}
+  .vb i{display:block;height:7px;border-radius:9px;background:linear-gradient(90deg,#60a5fa,#1d6fe0);width:calc(var(--w) * .6px);min-width:3px}
+  .audbody tbody tr:hover{background:#fffbeb}
+  .aud-legend{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px;margin:6px 0 14px}
+  .aud-legend>div{border-radius:10px;padding:10px 12px;background:#f8fafc;font-size:13px;color:#374151}
+  .aud-legend .pri{margin:0 0 5px}
+  .aud-q{display:grid;gap:8px;margin:6px 0 14px}
+  .aud-q>div{display:flex;gap:10px;align-items:flex-start;background:#eef6ff;border:1px solid #cfe3fb;border-radius:12px;padding:11px 13px;font-size:14px}
+  .aud-q>div::before{content:'?';flex:none;width:26px;height:26px;border-radius:50%;background:#1d6fe0;color:#fff;font-weight:800;display:grid;place-items:center}
+  .aud-steps{list-style:none;counter-reset:as;margin:6px 0 6px;padding:0 0 0 4px}
+  .aud-steps li{counter-increment:as;position:relative;padding:0 0 14px 42px;margin:0}
+  .aud-steps li::before{content:counter(as);position:absolute;left:0;top:-2px;width:28px;height:28px;border-radius:50%;background:#0e9384;color:#fff;font-weight:800;display:grid;place-items:center;font-size:13px}
+  .aud-steps li::after{content:'';position:absolute;left:13px;top:28px;bottom:2px;width:2px;background:#cdeee9}
+  .aud-steps li:last-child::after{display:none}
   @media screen and (max-width:640px){ .audbody,.audhead2,.audacts{padding-left:14px;padding-right:14px} }
   .qcrow .btn.qcok[data-qcwait]{opacity:.55}
   /* Tick boxes you can see (Jhen 10/11/2026): black border, green tick for Approve, red for Not approved. */
@@ -1907,6 +1946,17 @@ document.addEventListener('click', e => {
   }
 });
 document.addEventListener('keydown', e => { if (e.key === 'Escape' && !$('audModal').hidden) closeAudit(); });
+/* Priority filter inside an audit: rows carry data-pri; groups with nothing left are hidden. */
+document.addEventListener('click', e => {
+  const f = e.target.closest('.aud-filter [data-f]'); if (!f) return;
+  const box = f.closest('.audbody'), want = f.dataset.f;
+  box.querySelectorAll('.aud-filter [data-f]').forEach(b => b.classList.toggle('on', b === f));
+  box.querySelectorAll('.aud-grp').forEach(g => {
+    let n = 0;
+    g.querySelectorAll('tbody tr').forEach(tr => { const show = want === 'all' || tr.dataset.pri === want; tr.hidden = !show; if (show) n++; });
+    g.hidden = n === 0; if (want !== 'all' && n) g.open = true;
+  });
+});
 
 /* Page preview: browser bar with the target URL, the client's site header, the saved page
    sections, a footer and how it shows on Google. Pages written before the section format
