@@ -1265,6 +1265,364 @@
   .aud-steps li::before{content:counter(as);position:absolute;left:0;top:-2px;width:28px;height:28px;border-radius:50%;background:#0e9384;color:#fff;font-weight:800;display:grid;place-items:center;font-size:13px}
   .aud-steps li::after{content:'';position:absolute;left:13px;top:28px;bottom:2px;width:2px;background:#cdeee9}
   .aud-steps li:last-child::after{display:none}
+  /* audit_ui v2 */
+  /* Audit pop-up v2 (Jose and Jhen 11/11/2026): score ring, chips, one card per check with a tick, bar charts. */
+  .aud-hero{display:flex;gap:18px;align-items:center;flex-wrap:wrap;background:linear-gradient(135deg,#f8fafc,#eef2f7);border:1px solid #e3e8ef;border-radius:16px;padding:16px 18px;margin:0 0 14px}
+  .aud-ring{--c:#1c9b5e;width:104px;height:104px;border-radius:50%;flex:none;display:grid;place-content:center;text-align:center;
+    background:radial-gradient(closest-side,#fff 76%,transparent 77%),conic-gradient(var(--c) calc(var(--s)*1%),#e5e9ef 0);animation:audring .9s ease-out}
+  .aud-ring.r-fair{--c:#e3a008}.aud-ring.r-poor{--c:#d92d20}
+  .aud-ring b{font-size:30px;line-height:1;font-weight:800;color:#111827}.aud-ring span{font-size:12px;color:#6b7280;font-weight:700}
+  @keyframes audring{from{background:radial-gradient(closest-side,#fff 76%,transparent 77%),conic-gradient(var(--c) 0%,#e5e9ef 0)}}
+  .aud-hero-t{flex:1;min-width:200px}
+  .aud-hero-l{font-size:19px;font-weight:800;margin:0;color:#111827}.aud-hero-s{margin:2px 0 8px;color:#4b5563;font-size:13.5px}
+  .aud-chips{display:flex;gap:6px;flex-wrap:wrap}
+  .aud-chip{font-size:12px;font-weight:700;border-radius:999px;padding:4px 10px;background:#fff;border:1px solid #e3e8ef;color:#374151}
+  .aud-chip b{font-size:13px}.aud-chip.c-hi{background:#fde2e0;border-color:#f5b5ae;color:#a8231a}.aud-chip.c-md{background:#fff3c4;border-color:#f2d675;color:#7a4b00}
+  .aud-chip.c-lo{background:#eef1f4}.aud-chip.c-ok{background:#d9f3e5;border-color:#a7e0c3;color:#14532d}
+  .aud-prog{margin-top:10px;display:flex;align-items:center;gap:10px;font-size:12.5px;font-weight:700;color:#14532d}
+  .aud-prog i{flex:1;max-width:260px;height:8px;border-radius:9px;background:#e5e9ef;position:relative;overflow:hidden}
+  .aud-prog i::after{content:'';position:absolute;inset:0;width:var(--p,0%);background:#1c9b5e;border-radius:9px;transition:width .4s}
+  .aud-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin:12px 0 16px}
+  .aud-tiles div{background:#fff;border:1px solid #e3e8ef;border-radius:12px;padding:10px 12px}
+  .aud-tiles b{display:block;font-size:22px;line-height:1.15;color:#111827;font-variant-numeric:tabular-nums}.aud-tiles span{font-size:12px;color:#4b5563}
+  .aud-intro{color:#4b5563;font-size:13.5px}
+  .aud-cards{display:grid;gap:8px;padding:10px}
+  .af{display:flex;gap:12px;align-items:flex-start;background:#fff;border:1px solid #e5e7eb;border-left:5px solid #b8c2cc;border-radius:12px;padding:11px 12px;transition:box-shadow .15s,border-color .15s}
+  .af:hover{box-shadow:0 2px 10px rgba(16,24,40,.08)}
+  .af.p-hi{border-left-color:#d92d20}.af.p-md{border-left-color:#e3a008}.af.p-lo{border-left-color:#94a3b8}.af.p-ok{border-left-color:#1c9b5e;background:#fbfefc}
+  .af-ic{width:28px;height:28px;border-radius:50%;flex:none;display:grid;place-items:center;font-weight:800;font-size:15px;color:#fff;background:#94a3b8}
+  .af.p-hi .af-ic{background:#d92d20}.af.p-md .af-ic{background:#e3a008}.af.p-ok .af-ic{background:#1c9b5e}
+  .af-main{flex:1;min-width:0}
+  .af-t{font-weight:800;margin:0 0 2px;color:#111827;font-size:14.5px}
+  .af-f{margin:0 0 4px;font-size:13.5px;color:#374151}.af-x{margin:0 0 4px;font-size:13.5px;color:#1f2937}
+  .af-meta{margin:0;display:flex;gap:6px;flex-wrap:wrap}
+  .af-lab,.af-own{font-size:11px;font-weight:700;border-radius:999px;padding:2px 8px;background:#f1f5f9;color:#475569}
+  .af.p-hi .af-lab{background:#fde2e0;color:#a8231a}.af.p-md .af-lab{background:#fff3c4;color:#7a4b00}.af.p-ok .af-lab{background:#d9f3e5;color:#14532d}
+  .af-own{background:#eef2ff;color:#3730a3}
+  .af-tick{flex:none;align-self:center}
+  .af-tick label{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;font-size:10.5px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.04em}
+  .af-tick input{appearance:none;width:30px;height:30px;border:2.5px solid #9aa5b1;border-radius:9px;background:#fff;cursor:pointer;display:grid;place-items:center;transition:all .15s}
+  .af-tick input:checked{background:#1c9b5e;border-color:#1c9b5e}
+  .af-tick input:checked::after{content:'';width:8px;height:14px;border:solid #fff;border-width:0 3px 3px 0;transform:rotate(45deg) translate(-1px,-2px)}
+  .af-tick input:focus-visible{outline:3px solid #1d6fe0;outline-offset:2px}
+  .af-tick input:disabled{opacity:.6;cursor:not-allowed}
+  .af.ticked{background:#f3fbf6;border-color:#bfe6cf}
+  .af.done .af-t::after{content:'Done';margin-left:8px;font-size:11px;background:#111827;color:#fff;border-radius:999px;padding:2px 8px;vertical-align:middle}
+  .aud-bars{display:grid;gap:7px;margin:8px 0 4px}
+  .ab{display:grid;grid-template-columns:minmax(90px,34%) 1fr auto;gap:10px;align-items:center;font-size:13px}
+  .ab-l{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#374151}
+  .ab-t{height:14px;background:#eef1f4;border-radius:9px;overflow:hidden}.ab-t i{display:block;height:100%;background:#94a3b8;border-radius:9px;animation:audbar .8s ease-out}
+  .ab.me .ab-l{font-weight:800;color:#111827}.ab.me .ab-t i{background:#f2b705}
+  .ab-v{font-weight:700;font-variant-numeric:tabular-nums;min-width:44px;text-align:right}
+  @keyframes audbar{from{width:0}}
+  .aud-cols{display:flex;gap:16px;align-items:flex-end;height:150px;padding:8px 4px 0;margin:6px 0}
+  .ac{display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;max-width:90px;height:100%;justify-content:flex-end;font-size:12px;color:#4b5563}
+  .ac-b{width:42px;background:#93c5fd;border-radius:8px 8px 3px 3px;position:relative;overflow:hidden;min-height:4px}
+  .ac-b i{position:absolute;left:0;right:0;bottom:0;background:#1d6fe0}
+  .ac b{font-size:15px;color:#111827}.ac em{font-style:normal;font-weight:700;color:#14532d}
+  .aud-cap .key{display:inline-block;width:10px;height:10px;border-radius:3px;vertical-align:middle;margin:0 3px 0 6px}.key.k1{background:#1d6fe0}.key.k2{background:#93c5fd}
+  .aud-pack,.aud-serps{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px;margin:8px 0 14px}
+  .pk,.sr{background:#fff;border:1px solid #e3e8ef;border-radius:12px;padding:11px 13px}
+  .pk-q,.sr-q{font-weight:800;margin:0 0 6px;color:#111827}
+  .pk ol,.sr ol{margin:0;padding-left:18px;font-size:13px}.pk li,.sr li{margin:0 0 2px}
+  .pk-you,.sr-you{margin:8px 0 0;font-size:12.5px;font-weight:700;color:#a8231a;background:#fde2e0;border-radius:8px;padding:4px 8px;display:inline-block}
+  .sr-c{display:grid;grid-template-columns:1fr 1fr;gap:10px}.sr-h{font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:#6b7280;margin:0 0 3px;font-weight:700}
+  .sr .ai,.sr .dir{font-size:10.5px;font-weight:700;border-radius:999px;padding:1px 7px;background:#ede9fe;color:#5b21b6;vertical-align:middle}.sr .dir{background:#f1f5f9;color:#475569}
+  /* Action list under each audit card: approved items and who is doing them. */
+  .audacts2{margin-top:8px;background:rgba(255,255,255,.75);border-radius:10px;padding:8px 10px}
+  .audacts2 p{margin:0 0 4px;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:#374151}
+  .audacts2 ul{list-style:none;margin:0;padding:0;display:grid;gap:4px}
+  .audacts2 li{display:flex;gap:8px;align-items:center;font-size:13px}
+  .audacts2 li .own{margin-left:auto;font-size:11px;font-weight:700;color:#3730a3;background:#eef2ff;border-radius:999px;padding:1px 7px;white-space:nowrap}
+  .audacts2 li.done span.t{text-decoration:line-through;color:#6b7280}
+  .audacts2 input{width:16px;height:16px;accent-color:#1c9b5e}
+  .audpct{font-size:12px;font-weight:700;color:#14532d}
+  @media (prefers-reduced-motion:reduce){.aud-ring,.ab-t i{animation:none}}
+  @media screen and (max-width:640px){.aud-ring{width:84px;height:84px}.aud-ring b{font-size:24px}.sr-c{grid-template-columns:1fr}.af{padding:10px}}
+  /* audit_ui v3 */
+  .audgenh{margin:14px 0 4px;font-size:15px;display:flex;align-items:center;gap:8px}
+  .audgenh::before{content:'';width:6px;height:18px;border-radius:4px;background:#f2b705}
+  /* v3 (Jhen 11/11/2026): near full screen pop-up, coloured tiles, chart panels, wide search rows, notes. */
+  .audsheet{max-width:min(1280px,96vw)!important;width:100%}
+  .audbody{padding:22px 28px}
+  .audbody h2{display:flex;align-items:center;gap:10px;font-size:19px;margin:30px 0 12px;padding-bottom:8px;border-bottom:2px solid #eef1f4}
+  .audbody h2::before{content:'';width:6px;height:20px;border-radius:4px;background:linear-gradient(#1d6fe0,#7c3aed);flex:none}
+  .aud-tiles{grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+  .aud-tiles .tl{display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto;column-gap:12px;align-items:center;border:0;border-radius:14px;padding:14px 16px}
+  .tl-i{grid-row:1/3;width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:#fff}
+  .tl-i svg{width:22px;height:22px;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+  .aud-tiles .tl b{font-size:26px}.aud-tiles .tl .tl-l{font-size:12.5px;font-weight:600}
+  .tl.t-blue{background:#e8f1fe}.tl.t-blue .tl-i svg{stroke:#1d6fe0}.tl.t-blue b{color:#1554b0}
+  .tl.t-violet{background:#f0ebfe}.tl.t-violet .tl-i svg{stroke:#7c3aed}.tl.t-violet b{color:#5b21b6}
+  .tl.t-amber{background:#fff4d6}.tl.t-amber .tl-i svg{stroke:#c27c00}.tl.t-amber b{color:#8a5300}
+  .tl.t-green{background:#dff5e9}.tl.t-green .tl-i svg{stroke:#1c9b5e}.tl.t-green b{color:#14532d}
+  .aud-cards{grid-template-columns:repeat(auto-fill,minmax(460px,1fr));gap:10px}
+  .aud-duo{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:4px 0 10px}
+  .aud-panel{background:#fff;border:1px solid #e3e8ef;border-radius:16px;padding:16px 18px;min-width:0}
+  .ap-h{display:flex;align-items:center;gap:10px;font-weight:800;font-size:15.5px;margin:0 0 12px;color:#111827}
+  .ap-i{width:32px;height:32px;border-radius:10px;background:#e8f1fe;display:grid;place-items:center}
+  .ap-i svg{width:18px;height:18px;fill:none;stroke:#1d6fe0;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+  .ap-gap{margin:12px 0 0;background:#fff4d6;border-radius:10px;padding:8px 12px;font-size:13.5px;font-weight:700;color:#7a4b00}
+  .ab{grid-template-columns:minmax(110px,38%) 1fr auto}
+  .ab-l em{font-style:normal;font-size:10.5px;font-weight:800;background:#f2b705;color:#3d2a00;border-radius:999px;padding:1px 7px;margin-left:4px}
+  .ab-t{height:18px}.ab-t i{background:linear-gradient(90deg,#60a5fa,#1d6fe0);animation-delay:var(--d,0ms);animation-fill-mode:backwards}
+  .ab.me .ab-t i{background:linear-gradient(90deg,#fcd34d,#f2b705)}
+  .aud-serps{grid-template-columns:1fr;gap:12px}
+  .sr{padding:0;overflow:hidden;border-radius:16px}
+  .sr-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:#f8fafc;border-bottom:1px solid #e3e8ef;padding:11px 16px}
+  .sr-q{display:flex;align-items:center;gap:8px;margin:0;font-size:16px}
+  .sr-q svg{width:18px;height:18px;fill:none;stroke:#1d6fe0;stroke-width:2.4;stroke-linecap:round}
+  .sr-top .sr-you{margin:0 0 0 auto}
+  .sr-c{grid-template-columns:1fr 1fr;gap:0}
+  .sr-col{padding:12px 16px}.sr-col.maps{border-right:1px solid #eef1f4}
+  .sr-col ol{list-style:none;padding:0;display:grid;gap:7px}
+  .sr-col li{display:flex;align-items:center;gap:10px;font-size:14px}
+  .rk{width:24px;height:24px;border-radius:50%;flex:none;display:grid;place-items:center;font-size:12px;font-weight:800;color:#fff;background:#94a3b8}
+  .rk.r1{background:#d4a017}.rk.r2{background:#8b98a8}.rk.r3{background:#b8743d}
+  .sr-col .nm.cmp{font-weight:800;color:#111827}.sr-col li.none{color:#6b7280;font-style:italic}
+  .aud-q{gap:10px}
+  .aud-q .q{display:block;background:#eef6ff;border:1px solid #cfe3fb;border-radius:14px;padding:12px 14px}
+  .aud-q .q::before{display:none}
+  .q-t{margin:0 0 8px;font-weight:700;display:flex;gap:10px;align-items:flex-start}
+  .q-t::before{content:'?';flex:none;width:26px;height:26px;border-radius:50%;background:#1d6fe0;color:#fff;font-weight:800;display:grid;place-items:center}
+  /* Notes on a check, answers to a question, general notes. */
+  .an{margin-top:8px;border-top:1px dashed #e3e8ef;padding-top:8px}
+  .an ul{list-style:none;margin:0 0 6px;padding:0;display:grid;gap:5px}
+  .an li{background:#f8fafc;border-radius:8px;padding:6px 9px;font-size:13px}
+  .an li .who{font-weight:800}.an li .when{color:#6b7280;font-size:11.5px;margin-left:6px}
+  .an li button{float:right;border:0;background:none;color:#9aa5b1;cursor:pointer;font-size:14px;line-height:1}
+  .an-f{display:flex;gap:6px}
+  .an-f input{flex:1;min-width:0;border:1px solid #d1d5db;border-radius:9px;padding:7px 10px;font:inherit;font-size:13.5px;background:#fff}
+  .an-f input:focus{outline:2px solid #1d6fe0;border-color:#1d6fe0}
+  .an-f button{border:0;border-radius:9px;background:#111827;color:#fff;font-weight:700;font-size:12.5px;padding:7px 12px;cursor:pointer;white-space:nowrap}
+  .an-open{border:0;background:none;color:#1d6fe0;font-weight:700;font-size:12.5px;cursor:pointer;padding:2px 0}
+  .q .an{border-top:0;padding-top:0}
+  .audgen{border-top:1px solid #e5e7eb;padding:16px 28px 6px}
+  .audgen h4{margin:0 0 8px;font-size:16px;display:flex;align-items:center;gap:8px}
+  .audgen h4::before{content:'';width:6px;height:18px;border-radius:4px;background:#f2b705}
+  @media screen and (max-width:900px){.aud-duo{grid-template-columns:1fr}.aud-cards{grid-template-columns:1fr}}
+  @media screen and (max-width:640px){.audbody{padding:16px 14px}.sr-c{grid-template-columns:1fr}.sr-col.maps{border-right:0;border-bottom:1px solid #eef1f4}.audgen{padding:14px}}
+  /* audit_ui v4 */
+  /* v4 (Jhen 11/11/2026): banners, fully tinted cards, Approved stamp, keyword cards, Strategy tab cards. */
+  .bn{display:block;position:relative;text-decoration:none;color:inherit;border-radius:16px;overflow:hidden;margin:0 0 16px;border:1px solid #e3e8ef;transition:transform .2s,box-shadow .2s}
+  .bn:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(16,24,40,.14)}
+  .bn:focus-visible{outline:3px solid #1d6fe0;outline-offset:3px}
+  .bn-cta{position:absolute;right:14px;bottom:14px;background:#111827;color:#fff;font-weight:800;font-size:13px;border-radius:999px;padding:8px 14px;box-shadow:0 4px 14px rgba(0,0,0,.25)}
+  .bn-site .bn-bar{display:flex;align-items:center;gap:6px;background:#eef1f4;padding:8px 12px;border-bottom:1px solid #dfe5ec}
+  .bn-site .bn-bar i{width:10px;height:10px;border-radius:50%;background:#f87171}.bn-site .bn-bar i+i{background:#fbbf24}.bn-site .bn-bar i+i+i{background:#34d399}
+  .bn-url{margin-left:10px;background:#fff;border-radius:999px;padding:3px 12px;font-size:12.5px;color:#374151;flex:1;max-width:420px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .bn-tag{margin-left:auto;font-size:11px;font-weight:800;background:#fff3c4;color:#7a4b00;border-radius:999px;padding:3px 9px}
+  .bn-site img{display:block;width:100%;height:min(330px,32vw);object-fit:cover;object-position:top}
+  .bn-noimg{display:grid;place-items:center;height:160px;font-weight:800;color:#6b7280}
+  .bn-gbp{display:grid;grid-template-columns:1.4fr 1fr;background:#fff}
+  .gb-photos{display:grid;grid-template-columns:2fr 1fr 1fr;grid-template-rows:1fr 1fr;gap:3px;height:230px}
+  .gb-photos img{width:100%;height:100%;object-fit:cover;display:block}.gb-photos img:first-child{grid-row:1/3}
+  .gb-card{display:flex;flex-direction:column;gap:5px;padding:18px 18px 60px;position:relative}
+  .gb-name{font-size:22px;font-weight:800;color:#111827}.gb-rate{font-size:14px;color:#4b5563}.gb-rate b{color:#111827}
+  .gb-stars{color:#f5a623;letter-spacing:1px}.gb-cat{font-size:13.5px;color:#4b5563}.gb-ph{font-size:13.5px;font-weight:700;color:#1a73e8}
+  .bn-search{display:flex;flex-direction:column;align-items:center;gap:10px;padding:26px 16px 58px;background:radial-gradient(120% 140% at 50% 0%,#ffffff 0%,#eef4ff 60%,#e6edfb 100%)}
+  .bs-logo{font-size:34px;font-weight:700;letter-spacing:-1px;font-family:Arial,sans-serif}
+  .bs-box{display:flex;align-items:center;gap:10px;width:min(560px,100%);background:#fff;border:1px solid #dfe1e5;border-radius:999px;padding:11px 18px;box-shadow:0 2px 8px rgba(32,33,36,.12);font-size:16px;color:#202124}
+  .bs-box svg{width:18px;height:18px;fill:none;stroke:#9aa0a6;stroke-width:2.4;stroke-linecap:round;flex:none}
+  .bs-q::after{content:'';display:inline-block;width:2px;height:18px;background:#1a73e8;margin-left:2px;vertical-align:-3px;animation:audcaret 1s steps(1) infinite}
+  @keyframes audcaret{50%{opacity:0}}
+  .bs-cap{font-size:13px;color:#5f6368;text-align:center}
+  /* Fully tinted check cards, soft colours. */
+  .af{position:relative}
+  .af.p-hi{background:#fff4f3;border-color:#f6cfca}.af.p-md{background:#fffaf0;border-color:#f3e0ad}.af.p-lo{background:#f6f8fb;border-color:#dfe5ec}
+  .af.p-ok{background:#f1faf5;border-color:#cbebd9}
+  .af.ticked{background:#eefaf3;border-color:#a7dcbc}
+  .af-stamp{position:absolute;right:76px;top:50%;margin-top:-22px;transform:rotate(-12deg);border:3px double #1c9b5e;color:#1c9b5e;border-radius:8px;
+    padding:4px 10px;font-weight:900;font-size:17px;letter-spacing:.14em;text-transform:uppercase;opacity:.82;pointer-events:none;background:rgba(255,255,255,.55);
+    font-family:"Courier New",ui-monospace,monospace;mix-blend-mode:multiply}
+  .af-stamp small{display:block;font-size:9.5px;letter-spacing:.06em;text-align:center;font-weight:700}
+  .af.stamp-new .af-stamp{animation:audstamp .55s cubic-bezier(.2,1.4,.4,1) both}
+  .af.stamp-new{animation:audthud .55s ease-out}
+  @keyframes audstamp{0%{opacity:0;transform:rotate(-24deg) scale(2.6)}60%{opacity:.95;transform:rotate(-10deg) scale(.92)}100%{opacity:.82;transform:rotate(-12deg) scale(1)}}
+  @keyframes audthud{0%,40%{transform:none}55%{transform:translateY(2px)}70%{transform:translateY(-1px)}100%{transform:none}}
+  /* Keyword cards and charts. */
+  .kwchips{display:flex;flex-wrap:wrap;gap:5px;margin:6px 0}
+  .kwc{font-size:12px;border-radius:999px;padding:3px 9px;background:#fff;border:1px solid #e3e8ef;color:#374151}
+  .kwc b{font-weight:800;margin-left:3px}.kwc.k-hi{border-color:#a7dcbc;background:#effaf3}.kwc.k-md{border-color:#f3dc9a;background:#fffaeb}.kwc.k-lt{border-color:#d3c6fa;background:#f5f2ff}
+  .kwcard .af-ic{font-size:13px}
+  .kwsplit{display:flex;height:22px;border-radius:999px;overflow:hidden;margin:4px 0 8px}
+  .kwsplit i{display:block}.kwsplit i.k-hi,.kwleg i.k-hi{background:#34c27d}.kwsplit i.k-md,.kwleg i.k-md{background:#f2c94c}
+  .kwsplit i.k-lo,.kwleg i.k-lo{background:#b8c2cc}.kwsplit i.k-lt,.kwleg i.k-lt{background:#9b7cf2}
+  .kwleg{display:flex;gap:14px;flex-wrap:wrap;font-size:12.5px;margin:0 0 10px}.kwleg i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+  .kwtable{margin-top:12px}
+  /* Strategy tab cards. */
+  .audgrid{grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:16px}
+  .audcard.v2{padding:0;overflow:hidden;background:#fff;border:1px solid #e3e8ef;box-shadow:0 2px 10px rgba(16,24,40,.06);gap:0;transition:transform .2s,box-shadow .2s}
+  .audcard.v2:hover{transform:translateY(-3px);box-shadow:0 12px 30px rgba(16,24,40,.14)}
+  .ac2-top{display:flex;align-items:center;gap:12px;padding:16px;color:#fff;background:linear-gradient(135deg,#1d6fe0,#6d4ae6)}
+  .a-website .ac2-top{background:linear-gradient(135deg,#7c3aed,#2563eb)}.a-gbp .ac2-top{background:linear-gradient(135deg,#0f9d58,#0e7490)}
+  .a-competitors .ac2-top{background:linear-gradient(135deg,#f59e0b,#ea580c)}
+  .ac2-top .audico{width:44px;height:44px;background:rgba(255,255,255,.95)}
+  .ac2-top .audkick{color:rgba(255,255,255,.85)}.ac2-top .audttl{color:#fff;font-size:17px}
+  .ac2-st{margin-left:auto;font-size:11.5px;font-weight:800;border-radius:999px;padding:4px 10px;background:rgba(255,255,255,.95);color:#111827;white-space:nowrap}
+  .ac2-st.ok{background:#d9f3e5;color:#14532d}.ac2-st.chg{background:#fde2e0;color:#a8231a}
+  .ac2-body{padding:14px 16px 16px;display:flex;flex-direction:column;gap:10px;flex:1}
+  .ac2-row{display:flex;align-items:center;gap:12px}
+  .ac2-ring{--c:#1c9b5e;width:54px;height:54px;border-radius:50%;flex:none;display:grid;place-content:center;text-align:center;
+    background:radial-gradient(closest-side,#fff 74%,transparent 75%),conic-gradient(var(--c) calc(var(--s)*1%),#e5e9ef 0)}
+  .ac2-ring.r-fair{--c:#e3a008}.ac2-ring.r-poor{--c:#d92d20}.ac2-ring b{font-size:15px;line-height:1}.ac2-ring span{font-size:9px;color:#6b7280;font-weight:700}
+  .ac2-meta{flex:1;min-width:0;font-size:12.5px;color:#4b5563}.ac2-meta b{display:block;font-size:13.5px;color:#111827}
+  .ac2-prog{height:8px;border-radius:9px;background:#eef1f4;overflow:hidden;margin-top:5px}.ac2-prog i{display:block;height:100%;background:#1c9b5e;border-radius:9px}
+  .audcard.v2 .audopen{align-self:flex-start}
+  .audcard.v2 .audacts2{background:#f8fafc;margin:0}
+  @media (prefers-reduced-motion:reduce){.af.stamp-new .af-stamp,.af.stamp-new,.bs-q::after{animation:none}}
+  @media screen and (max-width:700px){.bn-gbp{grid-template-columns:1fr}.gb-photos{height:170px}.af-stamp{right:62px;font-size:13px}}
+  /* audit_ui v5 */
+  /* v5 (Jhen 11/11/2026): four cards in a row, distinct colours, aligned; map cards, leaderboard, roadmap lanes, plan panel. */
+  .audgrid:has(.audcard.v2){grid-template-columns:repeat(4,minmax(0,1fr));align-items:stretch}
+  @media screen and (max-width:1180px){.audgrid:has(.audcard.v2){grid-template-columns:repeat(2,minmax(0,1fr))}}
+  @media screen and (max-width:640px){.audgrid:has(.audcard.v2){grid-template-columns:1fr}}
+  .audcard.v2{display:flex;flex-direction:column;min-height:100%}
+  .ac2-top{min-height:92px;align-items:flex-start;flex-wrap:nowrap}
+  .ac2-top>div{flex:1;min-width:0}.ac2-top .audttl{line-height:1.2}
+  .ac2-body .audsum{display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;min-height:5.6em}
+  .ac2-body .ac2-row{margin-top:auto}
+  .a-keyword_research .ac2-top{background:linear-gradient(135deg,#0284c7,#06b6d4)}
+  .a-website .ac2-top{background:linear-gradient(135deg,#7c3aed,#db2777)}
+  .a-gbp .ac2-top{background:linear-gradient(135deg,#15803d,#22c55e)}
+  .a-competitors .ac2-top{background:linear-gradient(135deg,#ea580c,#f59e0b)}
+  .aud-chip.c-lt{background:#f0ebfe;border-color:#d3c6fa;color:#5b21b6}
+  .bn-site img{height:auto;aspect-ratio:2.7/1;object-fit:cover}
+  /* GBP map cards. */
+  .aud-pack{grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px}
+  .pk{padding:0;overflow:hidden;border-radius:16px;background:#fff}
+  .pk-q{display:flex;align-items:center;gap:8px;background:linear-gradient(135deg,#ecfdf3,#e0f2fe);padding:11px 14px;margin:0;border-bottom:1px solid #e3e8ef;font-size:15px}
+  .pk-q svg{width:18px;height:18px;fill:none;stroke:#15803d;stroke-width:2.2;flex:none}
+  .pk ol{list-style:none;padding:10px 14px 12px;margin:0;display:grid;gap:8px}
+  .pk li{display:flex;align-items:center;gap:10px;font-size:14px}
+  .pk li.ghost,.sr-col li.ghost{border:2px dashed #f2b705;border-radius:10px;padding:5px 8px;background:#fffbeb;font-weight:800;color:#8a5300}
+  li.ghost .rk{background:#f2b705;color:#3d2a00}
+  .pk.none{background:#f8fafc}.pk-nomap{margin:0;padding:12px 14px;font-size:13.5px;color:#374151}
+  /* Leaderboard. */
+  .aud-lb{display:grid;gap:8px;margin:6px 0 4px}
+  .lb{display:grid;grid-template-columns:auto minmax(120px,30%) 1fr auto;gap:12px;align-items:center;background:#fff;border:1px solid #e3e8ef;border-radius:12px;padding:9px 12px}
+  .lb.top{background:#fffdf5;border-color:#f3e0ad}
+  .lb-n{font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .lb-b{display:flex;height:14px;border-radius:9px;overflow:hidden;background:#eef1f4}
+  .lb-b i{display:block}.lb-b i.m,.aud-cap .key.km{background:#22c55e}.lb-b i.w,.aud-cap .key.kw{background:#3b82f6}.lb-b i.e{background:#eef1f4}
+  .lb-v{font-size:12.5px;font-weight:800;color:#374151;white-space:nowrap}
+  .rk.r4{background:#94a3b8}
+  .sr-col.maps .sr-h{color:#15803d}.sr-col.web .sr-h{color:#1d4ed8}
+  /* Keyword roadmap lanes. */
+  .kwroad{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:6px 0 12px}
+  .lane{border-radius:16px;padding:12px;min-width:0;border:1px solid}
+  .lane.l-hi{background:#effaf3;border-color:#bfe6cf}.lane.l-md{background:#fffaeb;border-color:#f3dc9a}
+  .lane.l-lo{background:#f6f8fb;border-color:#dfe5ec}.lane.l-lt{background:#f5f2ff;border-color:#d9cdfb}
+  .ln-h{margin:0 0 10px;display:flex;flex-direction:column;gap:2px}
+  .ln-h b{font-size:15.5px;color:#111827}.ln-h span{font-size:12.5px;color:#4b5563}.ln-h em{font-style:normal;font-size:12px;font-weight:800;color:#374151}
+  .lane ul{list-style:none;margin:0;padding:0;display:grid;gap:6px;max-height:420px;overflow:auto}
+  .lane li{background:#fff;border-radius:10px;padding:7px 9px;display:grid;grid-template-columns:1fr auto;gap:2px 8px;font-size:13px;box-shadow:0 1px 2px rgba(16,24,40,.06)}
+  .ln-k{font-weight:700;color:#111827}.ln-v{font-weight:800;font-variant-numeric:tabular-nums}.ln-w{grid-column:1/3;font-size:11.5px;color:#6b7280}
+  @media screen and (max-width:1000px){.kwroad{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  @media screen and (max-width:560px){.kwroad{grid-template-columns:1fr}.lb{grid-template-columns:auto 1fr auto}.lb-b{grid-column:1/4}}
+  /* How your plan covers this. */
+  .aud-plan{display:grid;grid-template-columns:1.3fr 1fr;gap:14px;margin:6px 0 10px}
+  .pl-in,.pl-ex{border-radius:16px;padding:14px 16px;min-width:0}
+  .pl-in{background:#effaf3;border:1px solid #bfe6cf}.pl-ex{background:#f5f2ff;border:1px solid #d9cdfb}
+  .pl-h{margin:0 0 10px;font-weight:800;font-size:15px;color:#111827}
+  .pl-row{display:flex;gap:10px;align-items:flex-start;margin:0 0 9px}
+  .pl-row div{display:flex;flex-direction:column}.pl-row b{font-size:14px}.pl-row span{font-size:13px;color:#374151}.pl-row em{font-style:normal;font-size:12px;font-weight:700;color:#15803d}
+  .pl-chk,.pl-plus{width:26px;height:26px;border-radius:50%;flex:none;display:grid;place-items:center;font-weight:900;color:#fff;background:#1c9b5e}
+  .pl-plus{background:#7c3aed}.pl-row.you .pl-chk{background:#f2b705;color:#3d2a00}
+  @media screen and (max-width:800px){.aud-plan{grid-template-columns:1fr}}
+  /* audit_ui v6 */
+  /* v6 (Jhen 11/11/2026): keyword roadmap as a branded road, slim plan strip, team only talking point. */
+  .road{margin:8px 0 18px;border-radius:18px;overflow:hidden;border:1px solid #e3e8ef;background:#fff}
+  .rd-scene{position:relative;height:190px;background:linear-gradient(#e0f2fe 0%,#f0f9ff 52%,#d9f99d 52%,#bbf7d0 100%);overflow:hidden}
+  .rd-way{position:absolute;left:-10px;right:-10px;bottom:30px;height:44px;background:#3f4b5b;border-top:4px solid #cbd5e1;border-bottom:4px solid #cbd5e1}
+  .rd-line{position:absolute;left:0;right:0;top:50%;border-top:4px dashed #fde68a;margin-top:-2px}
+  .rd-stop{position:absolute;top:12px;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:4px;border:0;background:none;cursor:pointer;padding:0;z-index:2;width:min(150px,24%)}
+  .rd-stop::after{content:"";width:3px;height:30px;background:#94a3b8;border-radius:2px;order:3}
+  .rd-pin{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-weight:900;font-size:14px;color:#fff;background:#94a3b8;box-shadow:0 2px 6px rgba(0,0,0,.2);transition:transform .25s;flex:none}
+  .rd-lab{order:2;background:#fff;border-radius:10px;padding:5px 9px;box-shadow:0 2px 8px rgba(16,24,40,.12);display:flex;flex-direction:column;align-items:center;line-height:1.2;max-width:100%}
+  .rd-lab b{font-size:13.5px;color:#111827;white-space:nowrap}.rd-lab span{font-size:11.5px;color:#4b5563}
+  .rd-stop.on .rd-pin{transform:scale(1.22)}.rd-stop.on .rd-lab{outline:3px solid var(--rd-acc)}
+  .rd-stop:focus-visible{outline:none}.rd-stop:focus-visible .rd-lab{outline:3px solid #1d6fe0}
+  .s-hi .rd-pin{background:#16a34a}.s-md .rd-pin{background:#d99a00}.s-lo .rd-pin{background:#64748b}.s-lt .rd-pin{background:#7c3aed}
+  .rd-car{position:absolute;bottom:40px;left:var(--pos);transform:translateX(-50%);width:104px;transition:left 1.1s cubic-bezier(.6,0,.3,1);z-index:3;filter:drop-shadow(0 4px 3px rgba(0,0,0,.25))}
+  .rd-car svg{display:block;width:100%;transition:transform .3s}.rd-car.rev svg{transform:scaleX(-1)}
+  .rd-car.rev svg text{transform:scaleX(-1);transform-box:fill-box;transform-origin:center}
+  .rd-w{transform-box:fill-box;transform-origin:center}.rd-car.moving .rd-w{animation:rdspin .45s linear infinite}
+  .rd-car.moving{animation:rdbob .3s ease-in-out infinite alternate}
+  @keyframes rdspin{to{transform:rotate(360deg)}}@keyframes rdbob{to{margin-bottom:2px}}
+  .rd-flag{position:absolute;right:8px;bottom:70px;font-size:26px}
+  .rd-nav{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 14px;background:var(--rd-navy);color:#fff}
+  .rd-btn{border:0;border-radius:999px;background:var(--rd-acc);color:#1f1400;font-weight:800;font-size:13px;padding:7px 14px;cursor:pointer}
+  .rd-btn:focus-visible{outline:3px solid #fff;outline-offset:2px}.rd-hint{font-size:12.5px;opacity:.85;text-align:center}
+  .rd-panel{padding:14px 16px 16px}
+  .rd-ph{display:flex;align-items:center;gap:12px;margin:0 0 12px}.rd-ph div{display:flex;flex-direction:column;flex:1}
+  .rd-ph b{font-size:18px;color:#111827}.rd-ph span{font-size:13px;color:#4b5563}.rd-ph em{font-style:normal;font-size:12.5px;font-weight:800;color:#374151;text-align:right}
+  .rd-list{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:8px}
+  .rd-list li{border:1px solid #e3e8ef;border-radius:12px;padding:9px 11px;display:grid;gap:4px;animation:rdin .35s ease-out both}
+  .rd-panel.s-hi .rd-list li{background:#f3fbf6}.rd-panel.s-md .rd-list li{background:#fffbeb}.rd-panel.s-lo .rd-list li{background:#f8fafc}.rd-panel.s-lt .rd-list li{background:#f7f4ff}
+  .rd-list li.more{display:none}.rd-panel.all .rd-list li.more{display:grid}
+  .rk-k{font-weight:800;color:#111827;font-size:14px}.rk-w{font-size:12px;color:#6b7280}
+  .rk-v{display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:800;font-variant-numeric:tabular-nums}
+  .rk-v i{display:block;height:6px;border-radius:6px;background:var(--rd-acc);max-width:70%}
+  .rd-more{margin-top:10px;border:1px solid #cfd6de;background:#fff;border-radius:999px;padding:6px 14px;font-weight:700;cursor:pointer}
+  @keyframes rdin{from{opacity:0;transform:translateY(6px)}}
+  @media (prefers-reduced-motion:reduce){.rd-car{transition:none}.rd-car.moving,.rd-car.moving .rd-w,.rd-list li{animation:none}}
+  @media screen and (max-width:640px){.rd-scene{height:200px}.rd-lab span{display:none}.rd-lab b{font-size:11.5px;white-space:normal;text-align:center}.rd-car{width:78px}.rd-hint{display:none}}
+  .aud-plan2{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:18px 0 6px;padding:10px 14px;border-radius:12px;background:#f3fbf6;border:1px solid #cbebd9}
+  .pl2-h{font-weight:800;font-size:13.5px;color:#14532d}.pl2-c{font-size:12.5px;font-weight:700;background:#fff;border:1px solid #cbebd9;border-radius:999px;padding:3px 10px;color:#1f2937}
+  .pl2-c.you{border-color:#f3dc9a;background:#fffbeb}
+  .aud-talk{margin:10px 0 6px;padding:12px 14px;border-radius:12px;background:#f5f2ff;border:1px dashed #a78bfa}
+  .tk-h{margin:0 0 6px;font-weight:800;color:#4c1d95}.tk-h span{font-size:11.5px;font-weight:700;background:#ede9fe;border-radius:999px;padding:2px 8px;margin-left:6px;color:#5b21b6}
+  .tk-r{margin:0 0 4px;font-size:13.5px}
+  .rd-sky{position:absolute;left:0;right:0;bottom:98px;height:60px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='60' viewBox='0 0 240 60'%3E%3Cg fill='%23c7d6e6'%3E%3Cpath d='M0 60V34l18-14 18 14v26z'/%3E%3Cpath d='M40 60V40h10V28l16-12 16 12v32z'/%3E%3Crect x='92' y='30' width='6' height='30'/%3E%3Ccircle cx='95' cy='26' r='12'/%3E%3Cpath d='M112 60V30l22-16 22 16v30z'/%3E%3Cpath d='M164 60V38l14-10 14 10v22z'/%3E%3Crect x='200' y='34' width='6' height='26'/%3E%3Ccircle cx='203' cy='30' r='10'/%3E%3Cpath d='M214 60V42l13-9 13 9v18z'/%3E%3C/g%3E%3C/svg%3E") repeat-x bottom left/240px 60px;opacity:.9}
+  .rd-car{width:140px;bottom:30px}.rd-way{bottom:24px;height:50px}.rd-scene{height:200px}.rd-flag{bottom:76px}
+  @media screen and (max-width:640px){.rd-car{width:96px}.rd-sky{bottom:92px}}
+  /* audit_ui v7 */
+  /* v7 (Jhen 11/11/2026): card header in two rows so titles never wrap into the status pill; equal heights. */
+  .ac2-top{flex-direction:column;align-items:stretch;gap:10px;min-height:0;padding:14px 16px 16px}
+  .ac2-r1{display:flex;align-items:center;gap:10px}
+  .ac2-r1 .audkick{white-space:nowrap}
+  .ac2-r1 .ac2-st{margin-left:auto}
+  .ac2-top .audttl{margin:0;font-size:18px;line-height:1.2;min-height:2.4em;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .ac2-body .audsum{line-height:1.5;height:4.5em;min-height:4.5em;flex:none;overflow:hidden;margin:0;-webkit-line-clamp:3}
+  .ac2-body .ac2-row{margin-top:auto;align-items:flex-start;padding-top:6px;min-height:72px}
+  .ac2-meta{padding-top:3px}.ac2-meta b{line-height:1.25}.ac2-prog{display:block}
+  /* audit_ui v8 */
+  /* v8 (Jhen 11/11/2026): progress bars line up; the stamp carries the client's brand. */
+  .ac2-meta b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.5em}
+  .af-stamp{border-color:var(--stamp-ink,#1c9b5e);color:var(--stamp-ink,#1c9b5e);text-align:center;line-height:1.05;padding:3px 10px 4px}
+  .af-stamp em{display:block;font-style:normal;font-size:10px;letter-spacing:.2em;border-bottom:1.5px solid currentColor;padding-bottom:2px;margin-bottom:2px}
+  .af-stamp small{border-top:1.5px solid currentColor;padding-top:2px;margin-top:2px}
+  .audcard.v2{position:relative}
+  .ac2-stamp{position:absolute;right:14px;top:112px;transform:rotate(-10deg);border:3px double var(--stamp-ink,#1c9b5e);color:var(--stamp-ink,#1c9b5e);border-radius:9px;
+    padding:4px 12px 5px;font-family:"Courier New",ui-monospace,monospace;font-weight:900;text-transform:uppercase;text-align:center;line-height:1.05;background:rgba(255,255,255,.8);
+    letter-spacing:.12em;font-size:18px;pointer-events:none;z-index:2;animation:audstamp .6s cubic-bezier(.2,1.4,.4,1) both}
+  .ac2-stamp em{display:block;font-style:normal;font-size:10.5px;letter-spacing:.22em;border-bottom:1.5px solid currentColor;padding-bottom:2px;margin-bottom:2px}
+  .ac2-stamp small{display:block;font-size:10px;letter-spacing:.05em;border-top:1.5px solid currentColor;padding-top:2px;margin-top:2px}
+  /* v8b: rings sit straight under the description (not pushed down by taller neighbours); stamps sit in clear space. */
+  .ac2-body{position:relative;flex:0 0 auto}.ac2-body .ac2-row{margin-top:0}
+  .audcard.v2 .audacts2{margin-top:auto}
+  .af-stamp{top:10px;right:64px;margin-top:0;font-size:14px;opacity:.92;mix-blend-mode:normal;background:rgba(255,255,255,.88)}
+  .af-stamp em{font-size:9.5px}.af.ticked .af-tick label{color:transparent;font-size:0}
+  .ac2-stamp{top:auto;right:12px;bottom:auto;margin-top:-6px;font-size:15px}
+  .ac2-body .ac2-stamp{top:56px}
+  @media screen and (max-width:700px){.af-stamp{right:54px;font-size:12px}}
+  /* v8c: stamps never cover text. Item: a reserved strip on the right. Card: beside the button. */
+  .af.ticked .af-main{padding-right:96px}
+  .af-stamp{top:12px;right:52px;font-size:12.5px;padding:2px 8px 3px}
+  .ac2-body .ac2-stamp{top:auto;bottom:10px;right:12px;margin:0;font-size:13.5px}
+  .ac2-row .ac2-stamp{position:static;transform:rotate(-7deg);margin:4px 0 0 4px;font-size:15px;animation:audstamp .6s cubic-bezier(.2,1.4,.4,1) both}
+  /* v9 (Jhen 11/11/2026): team only action list, 3 rows then Show all; green stamp; approved card body turns light green. */
+  .audcard.v2 .audacts2{margin-top:0;border-top:1px solid #eef1f4;border-radius:0 0 14px 14px}
+  .audacts2 li{display:grid;grid-template-columns:auto 1fr;gap:2px 8px;align-items:start}
+  .audacts2 li .t{line-height:1.35}
+  .audacts2 li .own{grid-column:2;margin:0;justify-self:start;font-size:10.5px}
+  .audacts2 li.more{display:none}.audacts2.all li.more{display:grid}
+  .audacts2 .acmore{margin-top:6px;border:0;background:none;color:#1d6fe0;font-weight:800;font-size:12.5px;cursor:pointer;padding:2px 0}
+  .audcard.v2.is-ok{border-color:#9fdcb8}
+  .audcard.v2.is-ok .ac2-body,.audcard.v2.is-ok .audacts2{background:#eefaf3}
+  .audacts2 .audpct{display:block;margin-top:4px}
+  @media screen and (max-width:700px){.af.ticked .af-main{padding-right:80px}.af-stamp{right:46px;font-size:11px}}
   @media screen and (max-width:640px){ .audbody,.audhead2,.audacts{padding-left:14px;padding-right:14px} }
   .qcrow .btn.qcok[data-qcwait]{opacity:.55}
   /* Tick boxes you can see (Jhen 10/11/2026): black border, green tick for Approve, red for Not approved. */
@@ -1907,7 +2265,8 @@ function linkedInReadHtml(r, html){
    Jhen 10/11/2026. One card per audit from ch_audits. "Being prepared" cards say why and
    cannot be opened. Ready ones open a pop-up with the audit, Approve / Not approved (with a
    reason) and comments. Decisions and client comments reach the team through Mabel. */
-let AUDITS = [], AUDIT_NOTES = [];
+let AUDITS = [], AUDIT_NOTES = [], AUDIT_ITEMS = [], AUD_JUST = null, AUD_CYCLE = null;
+const AUD_OWN = { website:'Website team', seo:'SEO team', gbp:'Google Business Profile', client:'You', r2r:'Ready to Rank' };
 const AUD_ICON = {
   keyword_research: '<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>',
   website: '<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M8 21h8M12 18v3"/></svg>',
@@ -1918,11 +2277,89 @@ const AUD_ST = { preparing:['soon','Being prepared'], for_approval:['due','For a
                  approved:['ok','Approved'], not_approved:['chg','Changes requested'] };
 async function loadAudits(){
   if (!document.querySelector('[data-audits]') && !CFG.audits) { /* still load: the tab may render later */ }
-  const [a, n] = await Promise.all([
+  const [a, n, it] = await Promise.all([
     sb.from('ch_audits').select('*').eq('client_id', CLIENT_ID).order('sort_order'),
-    sb.from('ch_audit_notes').select('*').eq('client_id', CLIENT_ID).order('created_at')
+    sb.from('ch_audit_notes').select('*').eq('client_id', CLIENT_ID).order('created_at'),
+    sb.from('ch_audit_items').select('*').eq('client_id', CLIENT_ID).eq('retired', false).order('sort_order')
   ]);
-  AUDITS = a.data || []; AUDIT_NOTES = n.data || [];
+  AUDITS = a.data || []; AUDIT_NOTES = n.data || []; AUDIT_ITEMS = (it && it.data) || [];
+}
+/* Approved items become the action list under the audit card (Jose and Jhen 11/11/2026). */
+function audToDo(aid){ return AUDIT_ITEMS.filter(i => i.audit_id === aid && i.priority !== 'ok'); }
+function audActionList(x){
+  const its = audToDo(x.id); if (!its.length || x.status === 'preparing' || ME.kind !== 'internal') return '';
+  const ap = its.filter(i => i.approved), dn = ap.filter(i => i.done_at), staff = ME.kind === 'internal';
+  if (!ap.length) return /aud-hero/.test(x.body_html || '') ? '' : '<div class="audacts2"><span class="audpct">0 of ' + its.length + ' items approved yet</span></div>';
+  return '<div class="audacts2"><p>What we are doing: ' + dn.length + ' of ' + ap.length + ' done</p><ul>'
+    + ap.map((i, n) => '<li class="' + (i.done_at ? 'done' : '') + (n >= 3 ? ' more' : '') + '">'
+        + (staff ? '<input type="checkbox" data-auddone="' + i.id + '"' + (i.done_at ? ' checked' : '') + ' aria-label="Mark done: ' + esc(i.action_title || i.title) + '">'
+                 : '<span aria-hidden="true">' + (i.done_at ? '&#10003;' : '&#8226;') + '</span>')
+        + '<span class="t">' + esc(i.action_title || i.title) + '</span><span class="own">' + (AUD_OWN[i.owner_team] || '') + '</span></li>').join('')
+    + '</ul>' + (ap.length > 3 ? '<button type="button" class="acmore" data-acmore>Show all ' + ap.length + '</button>' : '')
+    + (ap.length < its.length ? '<span class="audpct">' + (its.length - ap.length) + ' more waiting for approval</span>' : '') + '</div>';
+}
+/* Notes on each check and answers to each question (Jhen 11/11/2026). Anyone on the call can add
+   one; the author or staff can remove it. They reach the team in the batched Mabel post. */
+function audNotesBox(list, attrs, ph){
+  return '<div class="an">' + (list.length ? '<ul>' + list.map(n => '<li>'
+      + ((ME.kind === 'internal' || n.author_id === (ME.id || ME.user_id)) ? '<button type="button" data-andel="' + n.id + '" aria-label="Remove note">&times;</button>' : '')
+      + '<span class="who">' + esc(n.author_name || '') + '</span><span class="when">' + audWhen(n.created_at) + '</span><br>' + esc(n.note || '') + '</li>').join('') + '</ul>' : '')
+    + '<div class="an-f"><input type="text" ' + attrs + ' placeholder="' + ph + '" aria-label="' + ph + '"><button type="button" data-anadd>Save</button></div></div>';
+}
+function audDecorateNotes(aid){
+  const box = $('audPanel'); if (!box) return;
+  const its = AUDIT_ITEMS.filter(i => i.audit_id === aid), ns = AUDIT_NOTES.filter(n => n.audit_id === aid);
+  box.querySelectorAll('.af[data-item]').forEach(card => {
+    const it = its.find(i => i.item_key === card.dataset.item); if (!it || it.priority === 'ok') return;
+    const main = card.querySelector('.af-main'); main.querySelectorAll('.an').forEach(x => x.remove());
+    main.insertAdjacentHTML('beforeend', audNotesBox(ns.filter(n => n.item_id === it.id), 'data-annote-item="' + it.id + '"', 'Add a note from the call'));
+  });
+  box.querySelectorAll('[data-qa]').forEach(el => {
+    const q = el.closest('[data-q]'), label = q ? q.querySelector('.q-t').textContent : '';
+    el.innerHTML = audNotesBox(ns.filter(n => n.kind === 'answer' && n.ref_key === el.dataset.qa), 'data-annote-q="' + esc(el.dataset.qa) + '" data-label="' + esc(label) + '"', 'Type the answer');
+  });
+}
+async function audSaveNote(input){
+  const note = (input.value || '').trim(); if (!note) { input.focus(); return; }
+  const aid = $('audModal').dataset.audit, item = input.dataset.annoteItem || null, q = input.dataset.annoteQ || null;
+  input.disabled = true;
+  const { error } = await sb.rpc('ch_audit_note_add', { p_audit: aid, p_item: item, p_ref: q, p_label: q ? input.dataset.label : null, p_note: note });
+  input.disabled = false;
+  if (error) { badge(error.message || 'Could not save that note.', 'err'); return; }
+  await loadAudits(); audDecorateNotes(aid); badge('Note saved.');
+}
+document.addEventListener('click', async e => {
+  const add = e.target.closest('[data-anadd]'); if (add) { audSaveNote(add.parentElement.querySelector('input')); return; }
+  const del = e.target.closest('[data-andel]'); if (!del) return;
+  const { error } = await sb.rpc('ch_audit_note_delete', { p_note: Number(del.dataset.andel) });
+  if (error) { badge(error.message || 'Could not remove that note.', 'err'); return; }
+  await loadAudits(); audDecorateNotes($('audModal').dataset.audit); badge('Note removed.');
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && e.target.matches('[data-annote-item],[data-annote-q]')) { e.preventDefault(); audSaveNote(e.target); }
+});
+/* Fill the tick boxes in an open audit from ch_audit_items. A tick means approved. */
+function audDecorate(aid){
+  const box = $('audPanel'); if (!box) return;
+  box.style.setProperty('--stamp-ink', audBrand(box.innerHTML).ink);
+  const its = AUDIT_ITEMS.filter(i => i.audit_id === aid);
+  box.querySelectorAll('[data-tick]').forEach(el => {
+    const it = its.find(i => i.item_key === el.dataset.tick); if (!it) { el.innerHTML = ''; return; }
+    const card = el.closest('.af'); if (card) { card.classList.toggle('ticked', it.approved); card.classList.toggle('done', !!it.done_at);
+      card.querySelectorAll('.af-stamp').forEach(x => x.remove());
+      if (it.approved) {
+        card.insertAdjacentHTML('beforeend', audStampHtml('af-stamp', audBrand(box.innerHTML), it.approved_name, audWhen(it.approved_at)));
+        if (it.id === AUD_JUST) { card.classList.remove('stamp-new'); void card.offsetWidth; card.classList.add('stamp-new'); setTimeout(() => card.classList.remove('stamp-new'), 800); AUD_JUST = null; }
+      } }
+    el.innerHTML = '<label><input type="checkbox" data-audtick="' + it.id + '"' + (it.approved ? ' checked' : '') + (it.done_at ? ' disabled' : '')
+      + ' aria-label="Approve: ' + esc(it.title) + '">' + (it.done_at ? 'Done' : it.approved ? 'Approved' : 'Approve') + '</label>';
+  });
+  const t = audToDo(aid), a = t.filter(i => i.approved).length;
+  box.querySelectorAll('[data-audprog]').forEach(pg => {
+    if (!t.length) return; pg.hidden = false;
+    pg.querySelector('i').style.setProperty('--p', (100 * a / t.length) + '%');
+    pg.querySelector('span').textContent = a + ' of ' + t.length + ' approved';
+  });
 }
 function renderAudits(){
   document.querySelectorAll('[data-audits]').forEach(box => {
@@ -1930,6 +2367,7 @@ function renderAudits(){
     box.innerHTML = AUDITS.map((x, i) => {
       const [k, lab] = AUD_ST[x.status] || AUD_ST.preparing, ready = x.status !== 'preparing';
       const wants = x.status === 'for_approval';
+      if (/aud-hero/.test(x.body_html || '')) return audCardV2(x, i, k, lab, ready, wants);
       return '<div class="audcard st-' + k + '">'
         + '<div class="audtop"><span class="audico">' + (AUD_ICON[x.audit_key] || AUD_ICON.website) + '</span>'
         + '<span class="audkick">Audit ' + String(i + 1).padStart(2, '0') + '</span></div>'
@@ -1939,15 +2377,39 @@ function renderAudits(){
         + (!ready && x.reason && ME.kind === 'internal' ? '<p class="audwhy"><b>Why it is not ready yet (team only):</b> ' + esc(x.reason) + '</p>' : '')
         + '<div class="audfoot"><span class="cbub ' + k + '">' + lab + '</span>'
         + (ready ? '<button class="audopen' + (wants ? ' audjig' : '') + '" type="button" data-audopen="' + x.id + '">Read &amp; approve</button>' : '')
-        + '</div></div>';
+        + '</div>' + audActionList(x) + '</div>';
     }).join('');
   });
+}
+/* v4 card (Jhen 11/11/2026). Score and label come from the audit's own hero, so they always match. */
+function audBrand(html){
+  const m = (html || '').match(/aud-brandmark" data-short="([^"]*)" data-ink="([^"]*)"/);
+  return m ? { short: m[1], ink: m[2] } : { short: (CLIENT_NAME || '').split(' ')[0], ink: '#1c9b5e' };
+}
+function audStampHtml(cls, br, who, when){
+  return '<span class="' + cls + '" aria-hidden="true"><em>' + esc(br.short) + '</em>Approved<small>' + esc((who || '').split(' ')[0]) + ' ' + esc(when || '') + '</small></span>';
+}
+function audCardV2(x, i, k, lab, ready, wants){
+  const b = x.body_html || '', m = b.match(/aud-ring r-(\w+)" style="--s:(\d+)"[^>]*><b>([^<]*)<\/b><span>([^<]*)<\/span>/), l = b.match(/aud-hero-l">([^<]*)</);
+  const t = audToDo(x.id), a = t.filter(it => it.approved).length;
+  const br = audBrand(b);
+  return '<div class="audcard v2 a-' + esc(x.audit_key) + (x.status === 'approved' ? ' is-ok' : '') + '" style="--stamp-ink:' + esc(br.ink) + '">'
+
+    + '<div class="ac2-top"><div class="ac2-r1"><span class="audico">' + (AUD_ICON[x.audit_key] || AUD_ICON.website) + '</span><span class="audkick">Audit ' + String(i + 1).padStart(2, '0') + '</span>'
+    + '<span class="ac2-st ' + k + '">' + lab + '</span></div><h4 class="audttl">' + esc(x.title) + '</h4></div>'
+    + '<div class="ac2-body">' + (x.summary ? '<p class="audsum">' + esc(x.summary) + '</p>' : '')
+    + (!ready && x.reason && ME.kind === 'internal' ? '<p class="audwhy"><b>Why it is not ready yet (team only):</b> ' + esc(x.reason) + '</p>' : '')
+    + (m ? '<div class="ac2-row"><span class="ac2-ring r-' + m[1] + '" style="--s:' + m[2] + '"><b>' + m[3] + '</b><span>' + m[4] + '</span></span>'
+         + (x.status === 'approved' ? audStampHtml('ac2-stamp', br, x.decided_name, audWhen(x.decided_at))
+            : '<span class="ac2-meta"><b>' + esc(l ? l[1] : '') + '</b>' + (t.length ? a + ' of ' + t.length + ' items approved<span class="ac2-prog"><i style="width:' + (100 * a / t.length) + '%"></i></span>' : '') + '</span>') + '</div>' : '')
+    + (ready ? '<button class="audopen' + (wants ? ' audjig' : '') + '" type="button" data-audopen="' + x.id + '">Read &amp; approve</button>' : '')
+    + '</div>' + audActionList(x) + '</div>';
 }
 function audWhen(t){ try { return new Date(t).toLocaleDateString('en-AU', { day:'numeric', month:'short' }); } catch(e) { return ''; } }
 function openAudit(id){
   const x = AUDITS.find(a => a.id === id); if (!x) return;
   const [k, lab] = AUD_ST[x.status] || AUD_ST.preparing;
-  const notes = AUDIT_NOTES.filter(n => n.audit_id === id);
+  const notes = AUDIT_NOTES.filter(n => n.audit_id === id && n.kind !== 'item_note' && n.kind !== 'answer');
   const decided = x.status === 'approved' || x.status === 'not_approved';
   $('audPanel').innerHTML =
     '<div class="audhead2"><span class="cbub ' + k + '">' + lab + '</span><h3 class="audttl">' + esc(x.title) + '</h3>'
@@ -1961,8 +2423,9 @@ function openAudit(id){
         + '<button class="audbtn ok" type="button" data-auddec="1"' + (x.status === 'approved' ? ' disabled' : '') + '>Approve audit</button>'
         + '<button class="audbtn no" type="button" data-auddec="0">Not approved</button>'
       + '</div>'
-      + '<textarea id="audNote" placeholder="Questions, or what needs changing. Needed for Not approved."></textarea>'
-      + '<div class="row"><button class="audbtn" type="button" data-audcom>Add comment</button><span class="audmsg" id="audMsg"></span></div>'
+      + '<h4 class="audgenh">General notes</h4>'
+      + '<textarea id="audNote" placeholder="Anything else from the call, questions, or what needs changing. Needed for Not approved."></textarea>'
+      + '<div class="row"><button class="audbtn" type="button" data-audcom>Add note</button><span class="audmsg" id="audMsg"></span></div>'
       + (notes.length ? '<ul class="audnotes">' + notes.map(n =>
           '<li><span class="who">' + esc(n.author_name || '') + '</span><span class="when">' + audWhen(n.created_at) + '</span><br>'
           + (n.kind === 'approved' ? '<span class="k-ok">Approved</span> ' : n.kind === 'not_approved' ? '<span class="k-no">Not approved</span> ' : '')
@@ -1970,9 +2433,41 @@ function openAudit(id){
     + '</div>';
   $('audModal').dataset.audit = id;
   $('audModal').hidden = false; document.body.style.overflow = 'hidden';
+  if (ME.kind !== 'internal') $('audPanel').querySelectorAll('.staff-only').forEach(el => el.remove());
+  audDecorate(id); audDecorateNotes(id); audCycle();
 }
 function audSay(m, err){ badge(m, err ? 'err' : ''); const el = $('audMsg'); if (el) { el.textContent = m; el.className = 'audmsg' + (err ? ' err' : ''); } }
-function closeAudit(){ $('audModal').hidden = true; document.body.style.overflow = ''; }
+function audCycle(){
+  clearInterval(AUD_CYCLE);
+  const el = document.querySelector('#audPanel [data-cycle]'); if (!el) return;
+  const qs = el.dataset.cycle.split('|').filter(Boolean), a = el.closest('a'); if (qs.length < 2) return;
+  if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  let qi = 0, ci = qs[0].length, del = true;
+  AUD_CYCLE = setInterval(() => {
+    const q = qs[qi];
+    if (del) { ci--; if (ci <= 0) { del = false; qi = (qi + 1) % qs.length; } }
+    else { ci++; if (ci >= qs[qi].length) { del = true; ci = qs[qi].length; clearInterval(AUD_CYCLE); setTimeout(audCycleResume, 1800); } }
+    el.textContent = (del ? q : qs[qi]).slice(0, Math.max(ci, 0));
+    if (a) a.href = 'https://www.google.com.au/search?q=' + encodeURIComponent(qs[qi]);
+  }, 55);
+  function audCycleResume(){ if (!$('audModal').hidden) { el.dataset.cycle = qs.slice(qi).concat(qs.slice(0, qi)).join('|'); audCycle(); } }
+}
+/* Keyword roadmap (Jhen 11/11/2026): tap a stop or Back/Next, the vehicle drives there and that stop's searches open. */
+document.addEventListener('click', e => {
+  const mo = e.target.closest('[data-rdmore]');
+  if (mo) { mo.closest('.rd-panel').classList.add('all'); mo.remove(); return; }
+  const st = e.target.closest('[data-stop]'), nv = e.target.closest('[data-roadnav]'); if (!st && !nv) return;
+  const r = (st || nv).closest('[data-road]'), stops = [...r.querySelectorAll('[data-stop]')];
+  const cur = stops.findIndex(x => x.classList.contains('on'));
+  const i = st ? +st.dataset.stop : Math.max(0, Math.min(stops.length - 1, cur + Number(nv.dataset.roadnav)));
+  if (i === cur) return;
+  stops.forEach((x, j) => { x.classList.toggle('on', j === i); x.setAttribute('aria-pressed', j === i ? 'true' : 'false'); });
+  r.style.setProperty('--pos', stops[i].style.left);
+  const car = r.querySelector('.rd-car');
+  if (car) { car.classList.toggle('rev', i < cur); car.classList.add('moving'); clearTimeout(car._t); car._t = setTimeout(() => car.classList.remove('moving'), 1100); }
+  r.querySelectorAll('[data-panel]').forEach(p => { p.hidden = Number(p.dataset.panel) !== i; });
+});
+function closeAudit(){ clearInterval(AUD_CYCLE); $('audModal').hidden = true; document.body.style.overflow = ''; }
 async function audAct(fn, args, okMsg){
   const { error } = await sb.rpc(fn, args);
   if (error) { audSay(error.message || 'Could not save that.', true); return; }
@@ -1997,6 +2492,22 @@ document.addEventListener('click', e => {
   }
 });
 document.addEventListener('keydown', e => { if (e.key === 'Escape' && !$('audModal').hidden) closeAudit(); });
+document.addEventListener('click', e => { const b = e.target.closest('[data-acmore]'); if (!b) return; const l = b.closest('.audacts2'); const all = l.classList.toggle('all'); b.textContent = all ? 'Show fewer' : 'Show all ' + l.querySelectorAll('li').length; });
+document.addEventListener('change', async e => {
+  const t = e.target.closest('[data-audtick],[data-auddone]'); if (!t) return;
+  const tick = 'audtick' in t.dataset, id = tick ? t.dataset.audtick : t.dataset.auddone, on = t.checked;
+  if (tick && on) AUD_JUST = id;
+  t.disabled = true;
+  const { error } = await sb.rpc(tick ? 'ch_audit_item_tick' : 'ch_audit_item_done', { p_item: id, p_on: on });
+  if (error) { t.checked = !on; t.disabled = false; badge(error.message || 'Could not save that.', 'err'); return; }
+  const aid = $('audModal').dataset.audit, before = (AUDITS.find(a => a.id === aid) || {}).status;
+  await loadAudits(); renderAudits();
+  if (!$('audModal').hidden && aid) {
+    const after = (AUDITS.find(a => a.id === aid) || {}).status;
+    if (after !== before) { const sc = $('audModal').scrollTop; openAudit(aid); $('audModal').scrollTop = sc; } else { audDecorate(aid); audDecorateNotes(aid); }
+  }
+  badge(tick ? (on ? 'Approved. It is on our to do list.' : 'Approval removed.') : (on ? 'Marked done.' : 'Marked not done.'));
+});
 /* Priority filter inside an audit: rows carry data-pri; groups with nothing left are hidden. */
 document.addEventListener('click', e => {
   const f = e.target.closest('.aud-filter [data-f]'); if (!f) return;
@@ -2004,7 +2515,7 @@ document.addEventListener('click', e => {
   box.querySelectorAll('.aud-filter [data-f]').forEach(b => b.classList.toggle('on', b === f));
   box.querySelectorAll('.aud-grp').forEach(g => {
     let n = 0;
-    g.querySelectorAll('tbody tr').forEach(tr => { const show = want === 'all' || tr.dataset.pri === want; tr.hidden = !show; if (show) n++; });
+    g.querySelectorAll('tbody tr, .af').forEach(tr => { const show = want === 'all' || tr.dataset.pri === want; tr.hidden = !show; if (show) n++; });
     g.hidden = n === 0; if (want !== 'all' && n) g.open = true;
   });
 });
